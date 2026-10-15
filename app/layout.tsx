@@ -1,4 +1,4 @@
-﻿import type { Metadata, Viewport } from "next";
+import type { Metadata, Viewport } from "next";
 import { Comfortaa } from "next/font/google";
 import "./globals.css";
 import React from "react";
@@ -65,7 +65,7 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" className={`dark ${comfortaa.variable}`}>
       <body
-        className={`${comfortaa.className} font-sans min-h-screen antialiased bg-[#090d16] text-slate-100 selection:bg-cyan-500/20 selection:text-cyan-200`}
+        className={`${comfortaa.className} font-sans min-h-screen antialiased bg-[#090d16] text-slate-100 selection:bg-rose-500/30 selection:text-white`}
       >
         {children}
       </body>

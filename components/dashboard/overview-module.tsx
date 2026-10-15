@@ -1,26 +1,26 @@
-﻿"use client";
+"use client";
 
 import React from "react";
-import { BarChart3, PieChart as PieChartIcon, CheckCircle2 } from "lucide-react";
+import { BarChart3, PieChart as PieChartIcon, CheckCircle2, ShieldAlert } from "lucide-react";
 import { CATEGORY_CHART_DATA, STATUS_DONUT_DATA } from "@/lib/data";
 
 export function OverviewModule() {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-in fade-in duration-300">
       {/* Gráfico 1: Cobertura por Categoria */}
-      <div className="lg:col-span-2 bg-[#0b0f1a]/95 backdrop-blur-2xl rounded-3xl p-6 sm:p-7 border border-white/10 flex flex-col justify-between gap-6 shadow-xl">
+      <div className="lg:col-span-2 liquid-glass-card rounded-3xl p-6 sm:p-7 flex flex-col justify-between gap-6 shadow-xl">
         <div>
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
             <div>
               <h3 className="text-base font-bold text-white flex items-center gap-2">
-                <BarChart3 className="h-4 w-4 text-[#06b6d4]" />
-                Cobertura de Estoque & Capital por Categoria
+                <BarChart3 className="h-4 w-4 text-cyan-400" />
+                Cobertura de Estoque &amp; Capital por Categoria
               </h3>
               <p className="text-xs text-slate-400 mt-0.5">
                 Comparativo de dias de cobertura média vs. capital financeiro alocado
               </p>
             </div>
-            <span className="text-xs font-mono font-bold text-[#06b6d4] px-2.5 py-1 rounded-lg bg-[#06b6d4]/10 border border-[#06b6d4]/20 w-fit">
+            <span className="text-xs font-mono font-bold text-cyan-300 px-3 py-1 rounded-full liquid-glass-pill w-fit">
               Meta: 30 a 45 dias
             </span>
           </div>
@@ -43,20 +43,20 @@ export function OverviewModule() {
                     <span
                       className={`font-extrabold ${
                         cat.cobertura < 20
-                          ? "text-[#f43f5e]"
+                          ? "text-rose-300"
                           : cat.cobertura > 60
-                          ? "text-[#f59e0b]"
-                          : "text-[#10b981]"
+                          ? "text-amber-300"
+                          : "text-emerald-300"
                       }`}
                     >
                       {cat.cobertura} dias
                     </span>
                   </div>
                 </div>
-                {/* Barra de progresso visual */}
+                {/* Barra de progresso visual com brilho sutil */}
                 <div className="w-full h-3 rounded-full bg-white/5 overflow-hidden flex items-center">
                   <div
-                    className={`h-full rounded-full ${cat.color} transition-all duration-700`}
+                    className={`h-full rounded-full ${cat.color} transition-all duration-700 shadow-sm`}
                     style={{ width: cat.barWidth }}
                   />
                 </div>
@@ -66,26 +66,32 @@ export function OverviewModule() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-4 border-t border-white/10 text-center text-xs">
-          <div className="p-3 rounded-2xl bg-white/[0.02] border border-white/5">
+          <div className="p-3.5 rounded-2xl bg-white/[0.02] border border-white/5">
             <div className="text-slate-400 text-[11px]">Risco Crítico (&lt;15D)</div>
-            <div className="text-[#f43f5e] font-extrabold font-mono mt-1">Aceleradores (14D)</div>
+            <div className="text-rose-300 font-extrabold font-mono mt-1 text-sm">
+              Aceleradores (14D)
+            </div>
           </div>
-          <div className="p-3 rounded-2xl bg-white/[0.02] border border-white/5">
+          <div className="p-3.5 rounded-2xl bg-white/[0.02] border border-white/5">
             <div className="text-slate-400 text-[11px]">Faixa Ideal (30-45D)</div>
-            <div className="text-[#10b981] font-extrabold font-mono mt-1">Redes (38D)</div>
+            <div className="text-emerald-300 font-extrabold font-mono mt-1 text-sm">
+              Redes (38D)
+            </div>
           </div>
-          <div className="p-3 rounded-2xl bg-white/[0.02] border border-white/5">
+          <div className="p-3.5 rounded-2xl bg-white/[0.02] border border-white/5">
             <div className="text-slate-400 text-[11px]">Sobreestoque (&gt;60D)</div>
-            <div className="text-[#f59e0b] font-extrabold font-mono mt-1">Armazenamento (72D)</div>
+            <div className="text-amber-300 font-extrabold font-mono mt-1 text-sm">
+              Armazenamento (72D)
+            </div>
           </div>
         </div>
       </div>
 
       {/* Gráfico 2: Donut de Distribuição de Saúde do Estoque */}
-      <div className="bg-[#0b0f1a]/95 backdrop-blur-2xl rounded-3xl p-6 sm:p-7 border border-white/10 flex flex-col justify-between gap-6 shadow-xl">
+      <div className="liquid-glass-card rounded-3xl p-6 sm:p-7 flex flex-col justify-between gap-6 shadow-xl">
         <div>
           <h3 className="text-base font-bold text-white flex items-center gap-2 mb-1">
-            <PieChartIcon className="h-4 w-4 text-[#a855f7]" />
+            <PieChartIcon className="h-4 w-4 text-purple-400" />
             Composição da Saúde do Estoque
           </h3>
           <p className="text-xs text-slate-400 mb-6">
@@ -156,14 +162,14 @@ export function OverviewModule() {
             {STATUS_DONUT_DATA.map((item, i) => (
               <div
                 key={i}
-                className="flex items-center justify-between text-xs p-2 rounded-xl bg-white/[0.02]"
+                className="flex items-center justify-between text-xs p-2.5 rounded-xl bg-white/[0.02]"
               >
                 <div className="flex items-center gap-2">
                   <span
                     className="h-2.5 w-2.5 rounded-full"
                     style={{ backgroundColor: item.color }}
                   />
-                  <span className="text-slate-300">{item.label}</span>
+                  <span className="text-slate-300 font-medium">{item.label}</span>
                 </div>
                 <span className={`font-mono font-extrabold ${item.textColor}`}>
                   {item.pct}%
@@ -173,8 +179,8 @@ export function OverviewModule() {
           </div>
         </div>
 
-        <div className="p-3.5 rounded-2xl bg-[#06b6d4]/10 border border-[#06b6d4]/20 text-xs text-[#06b6d4] text-center font-semibold flex items-center justify-center gap-2">
-          <CheckCircle2 className="w-4 h-4 text-[#06b6d4] shrink-0" />
+        <div className="p-3.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-xs text-emerald-300 text-center font-semibold flex items-center justify-center gap-2">
+          <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
           <span>96% do catálogo opera sem risco imediato de ruptura</span>
         </div>
       </div>

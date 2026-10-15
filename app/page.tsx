@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState } from "react";
 import { CollapsibleSidebar, ModuleTab } from "@/components/sidebar/collapsible-sidebar";
@@ -19,13 +19,14 @@ export default function DashboardPage() {
   const [isCopilotOpen, setIsCopilotOpen] = useState(false);
 
   return (
-    <div className="flex h-screen bg-[#090d16] text-slate-100 font-sans selection:bg-[#06b6d4]/20 selection:text-[#06b6d4] overflow-hidden">
+    <div className="flex h-screen bg-[#090d16] text-slate-100 font-sans selection:bg-rose-500/30 selection:text-white overflow-hidden">
       {/* 1. Menu Lateral (Sidebar) Retrátil: Inicia FECHADO (w-20), expansível para w-72 */}
       <CollapsibleSidebar
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         isOpen={isSidebarOpen}
         setIsOpen={setIsSidebarOpen}
+        onOpenCopilot={() => setIsCopilotOpen(true)}
       />
 
       {/* Conteúdo Principal (Direita) */}
@@ -39,7 +40,7 @@ export default function DashboardPage() {
         />
 
         {/* Área Principal: 100% foco nos dados desde o primeiro scroll */}
-        <main className="flex-1 w-full max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 space-y-6 pb-28">
+        <main className="flex-1 w-full max-w-7xl mx-auto p-3.5 sm:p-6 lg:p-8 space-y-6 pb-28">
           {/* Grid de 4 KPIs de Alto Impacto no Topo */}
           <KpiGrid />
 
@@ -57,7 +58,7 @@ export default function DashboardPage() {
         {/* Rodapé Clean */}
         <footer className="border-t border-white/10 py-5 text-center text-xs text-slate-400 mt-auto shrink-0 bg-[#0b0f1a]/80 backdrop-blur-md">
           Supply Chain &amp; Estoque &bull; RN Intelligence &bull; Desenvolvido por{" "}
-          <span className="text-[#06b6d4] font-semibold">Renan Nocelli</span> &bull;
+          <span className="text-cyan-400 font-semibold">Renan Nocelli</span> &bull;
           Modelagem Star Schema com 170+ Medidas DAX
         </footer>
       </div>

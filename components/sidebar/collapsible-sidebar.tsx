@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React from "react";
 import {
@@ -10,8 +10,10 @@ import {
   Zap,
   PanelLeftClose,
   PanelLeftOpen,
-  Users,
+  ChevronRight,
+  MessageSquare,
 } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export type ModuleTab = "visao_geral" | "cobertura" | "abc" | "fornecedores" | "simulador" | "dax";
 
@@ -19,16 +21,67 @@ export interface NavItem {
   id: ModuleTab;
   num: number;
   label: string;
+  description: string;
   icon: React.ComponentType<{ className?: string }>;
+  iconColor: string;
+  activeBg: string;
 }
 
 export const MODULES: NavItem[] = [
-  { id: "visao_geral", num: 1, label: "Visão Geral & Gráficos", icon: BarChart3 },
-  { id: "cobertura", num: 2, label: "Ruptura, Cobertura & D-Day", icon: Boxes },
-  { id: "abc", num: 3, label: "Curva ABC & Estoque Parado", icon: Layers },
-  { id: "fornecedores", num: 4, label: "SLA & Pedidos Fornecedores", icon: Truck },
-  { id: "simulador", num: 5, label: "Simulador What-If Estoque", icon: Sliders },
-  { id: "dax", num: 6, label: "Engenharia DAX & Modelagem", icon: Zap },
+  {
+    id: "visao_geral",
+    num: 1,
+    label: "Visão Geral & Gráficos",
+    description: "Cobertura & Saúde do Estoque",
+    icon: BarChart3,
+    iconColor: "text-cyan-400",
+    activeBg: "bg-cyan-500/15 border-cyan-500/40 text-cyan-300",
+  },
+  {
+    id: "cobertura",
+    num: 2,
+    label: "Ruptura, Cobertura & D-Day",
+    description: "Fila de Reposição Crítica",
+    icon: Boxes,
+    iconColor: "text-rose-400",
+    activeBg: "bg-rose-500/15 border-rose-500/40 text-rose-300",
+  },
+  {
+    id: "abc",
+    num: 3,
+    label: "Curva ABC & Estoque Parado",
+    description: "Pareto & Capital Parado",
+    icon: Layers,
+    iconColor: "text-amber-400",
+    activeBg: "bg-amber-500/15 border-amber-500/40 text-amber-300",
+  },
+  {
+    id: "fornecedores",
+    num: 4,
+    label: "SLA & Pedidos Fornecedores",
+    description: "OTIF & Atrasos de Importação",
+    icon: Truck,
+    iconColor: "text-emerald-400",
+    activeBg: "bg-emerald-500/15 border-emerald-500/40 text-emerald-300",
+  },
+  {
+    id: "simulador",
+    num: 5,
+    label: "Simulador What-If Estoque",
+    description: "Políticas Dinâmicas & Limiares",
+    icon: Sliders,
+    iconColor: "text-purple-400",
+    activeBg: "bg-purple-500/15 border-purple-500/40 text-purple-300",
+  },
+  {
+    id: "dax",
+    num: 6,
+    label: "Engenharia DAX & Modelagem",
+    description: "Star Schema & 170+ Medidas",
+    icon: Zap,
+    iconColor: "text-purple-400",
+    activeBg: "bg-purple-500/15 border-purple-500/40 text-purple-300",
+  },
 ];
 
 interface CollapsibleSidebarProps {
@@ -36,6 +89,7 @@ interface CollapsibleSidebarProps {
   setActiveTab: (tab: ModuleTab) => void;
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
+  onOpenCopilot?: () => void;
 }
 
 export function CollapsibleSidebar({
@@ -43,165 +97,222 @@ export function CollapsibleSidebar({
   setActiveTab,
   isOpen,
   setIsOpen,
+  onOpenCopilot,
 }: CollapsibleSidebarProps) {
   return (
     <>
-      {/* Backdrop no mobile para fechar sidebar quando expandida */}
+      {/* Mobile Backdrop */}
       {isOpen && (
         <div
           onClick={() => setIsOpen(false)}
-          className="fixed inset-0 bg-black/70 backdrop-blur-xs z-40 md:hidden animate-in fade-in duration-200"
+          className="fixed inset-0 bg-black/70 backdrop-blur-xs z-40 lg:hidden animate-in fade-in duration-200"
         />
       )}
 
       {/* Sidebar Retrátil: Inicia FECHADA/RECOLHIDA por padrão (w-20), expande para w-72 */}
       <aside
-        className={`flex flex-col bg-[#0b0f1a]/95 backdrop-blur-2xl border-r border-white/10 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] z-50 shrink-0 ${
+        className={cn(
+          "shrink-0 sticky top-0 h-screen flex-col justify-between border-r border-white/10 bg-[#0b0f1a]/95 backdrop-blur-2xl z-40 overflow-y-auto no-scrollbar shadow-2xl transition-all duration-300 ease-in-out",
           isOpen
-            ? "fixed inset-y-0 left-0 w-72 shadow-2xl md:relative md:shadow-none"
-            : "hidden md:flex md:w-20"
-        }`}
+            ? "fixed inset-y-0 left-0 w-72 lg:relative p-5 flex"
+            : "hidden lg:flex w-20 p-3"
+        )}
       >
-        {/* Topo da Sidebar: Emblema Oficial RN Intelligence */}
-        <div
-          className={`h-20 flex items-center px-4 border-b border-white/10 shrink-0 ${
-            isOpen ? "justify-between" : "justify-center"
-          }`}
-        >
-          {isOpen ? (
-            <div className="flex items-center gap-3 overflow-hidden whitespace-nowrap animate-in fade-in duration-200">
-              <div className="w-10 h-10 rounded-2xl bg-[#090d16] border border-[#06b6d4]/40 overflow-hidden flex items-center justify-center shrink-0 shadow-lg shadow-[#06b6d4]/10">
+        <div className="flex flex-col gap-5">
+          {/* Brand Header */}
+          <div
+            className={cn(
+              "flex items-center pb-4 border-b border-white/10 transition-all",
+              !isOpen ? "justify-center flex-col gap-3" : "justify-between"
+            )}
+          >
+            <div className="flex items-center gap-3 min-w-0">
+              <div
+                className="h-11 w-11 rounded-2xl bg-[#0c101d] border border-rose-500/30 flex items-center justify-center shadow-lg shadow-rose-500/10 overflow-hidden shrink-0 cursor-pointer"
+                onClick={() => setIsOpen(!isOpen)}
+                title={!isOpen ? "Expandir Menu Lateral" : undefined}
+              >
                 <img
                   src="/rn_logo_emblem.jpg"
                   alt="RN Intelligence"
                   className="w-full h-full object-cover"
                 />
               </div>
-              <div className="flex flex-col">
-                <h1 className="text-sm font-bold text-white tracking-tight leading-tight">
-                  Supply Chain
-                </h1>
-                <span className="text-[11px] text-slate-400 font-medium">
-                  RN Intelligence
-                </span>
-              </div>
+              {isOpen && (
+                <div className="flex flex-col min-w-0">
+                  <span className="font-extrabold text-base tracking-wider text-white">
+                    SUPPLY CHAIN
+                  </span>
+                  <span className="text-[11px] text-slate-400 font-medium truncate">
+                    RN Intelligence Analytics
+                  </span>
+                </div>
+              )}
             </div>
-          ) : (
-            <div
-              className="w-11 h-11 rounded-2xl bg-[#090d16] border border-[#06b6d4]/30 overflow-hidden flex items-center justify-center shrink-0 shadow-lg shadow-[#06b6d4]/10 group cursor-pointer hover:border-[#06b6d4] transition-colors"
-              onClick={() => setIsOpen(true)}
-              title="Expandir Menu Lateral"
-            >
-              <img
-                src="/rn_logo_emblem.jpg"
-                alt="RN Intelligence"
-                className="w-full h-full object-cover"
-              />
-            </div>
-          )}
 
-          {/* Botão de Toggle da Sidebar */}
-          {isOpen && (
+            {/* Toggle Button */}
             <button
               type="button"
-              onClick={() => setIsOpen(false)}
-              className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-white/[0.06] transition-colors shrink-0 cursor-pointer border border-transparent hover:border-white/5"
-              title="Recolher Menu (PanelLeftClose)"
-              aria-label="Recolher Menu Lateral"
+              onClick={() => setIsOpen(!isOpen)}
+              className={cn(
+                "p-2 rounded-xl text-slate-400 hover:text-white bg-white/[0.02] hover:bg-white/[0.08] border border-white/5 transition-all cursor-pointer",
+                !isOpen && "w-10 h-10 flex items-center justify-center"
+              )}
+              title={isOpen ? "Recolher menu" : "Expandir menu"}
+              aria-label={isOpen ? "Recolher menu" : "Expandir menu"}
             >
-              <PanelLeftClose className="w-5 h-5" />
-            </button>
-          )}
-        </div>
-
-        {/* Toggle quando recolhida (abaixo do emblema) */}
-        {!isOpen && (
-          <div className="py-2.5 flex justify-center border-b border-white/5 shrink-0">
-            <button
-              type="button"
-              onClick={() => setIsOpen(true)}
-              className="p-2 rounded-xl text-slate-400 hover:text-[#06b6d4] hover:bg-white/[0.06] transition-all cursor-pointer border border-transparent hover:border-[#06b6d4]/20"
-              title="Expandir Menu Lateral (PanelLeftOpen)"
-              aria-label="Expandir Menu Lateral"
-            >
-              <PanelLeftOpen className="w-5 h-5" />
+              {isOpen ? (
+                <PanelLeftClose className="h-4 w-4" />
+              ) : (
+                <PanelLeftOpen className="h-4 w-4 text-rose-400" />
+              )}
             </button>
           </div>
-        )}
 
-        {/* Navegação entre os 6 Módulos */}
-        <div className="flex-1 overflow-y-auto overflow-x-hidden py-4 px-3 space-y-1.5">
-          {isOpen ? (
-            <div className="px-3 pt-1 pb-2 text-[10px] uppercase font-bold tracking-wider text-slate-400">
-              Módulos Analíticos
-            </div>
-          ) : (
-            <div className="w-6 h-px bg-white/10 mx-auto my-2" />
-          )}
-
-          {MODULES.map((tab) => {
-            const Icon = tab.icon;
-            const isActive = activeTab === tab.id;
-
-            return (
+          {/* Navigation Menu */}
+          <div className="flex flex-col gap-1.5">
+            {/* Botão Executivo RN Intelligence Copilot */}
+            {onOpenCopilot && (
               <button
                 type="button"
-                key={tab.id}
-                onClick={() => {
-                  setActiveTab(tab.id);
-                  if (typeof window !== "undefined" && window.innerWidth < 768) {
-                    setIsOpen(false);
-                  }
-                }}
-                title={!isOpen ? `${tab.num}. ${tab.label}` : undefined}
-                className={`w-full flex items-center rounded-xl text-xs sm:text-sm font-medium transition-all cursor-pointer group ${
-                  isOpen ? "gap-3 px-3.5 py-2.5" : "justify-center p-3"
-                } ${
-                  isActive
-                    ? "bg-gradient-to-r from-[#06b6d4]/15 to-blue-500/10 text-[#06b6d4] font-semibold shadow-xs border border-[#06b6d4]/30"
-                    : "text-slate-400 hover:text-white hover:bg-white/[0.04] border border-transparent hover:border-white/5"
-                }`}
+                onClick={onOpenCopilot}
+                title={!isOpen ? "RN Intelligence Copilot" : undefined}
+                className={cn(
+                  "group relative w-full flex items-center transition-all border cursor-pointer mb-2 overflow-hidden",
+                  !isOpen
+                    ? "justify-center p-2.5 rounded-2xl bg-gradient-to-br from-rose-500/20 via-amber-500/10 to-rose-950/20 border-rose-500/40 text-rose-300 shadow-md shadow-rose-500/10"
+                    : "justify-between p-3 rounded-2xl bg-gradient-to-r from-rose-500/20 via-rose-500/10 to-transparent border-rose-500/35 hover:border-rose-500/60 text-left shadow-lg shadow-rose-500/10"
+                )}
               >
-                <Icon
-                  className={`w-4 h-4 shrink-0 transition-colors ${
-                    isActive ? "text-[#06b6d4]" : "text-slate-400 group-hover:text-[#06b6d4]"
-                  }`}
-                />
-                {isOpen && (
-                  <span className="whitespace-nowrap transition-all duration-300">
-                    {tab.label}
-                  </span>
-                )}
-                {isActive && isOpen && (
-                  <div className="ml-auto w-1.5 h-4 bg-[#06b6d4] rounded-full shrink-0 shadow-sm shadow-[#06b6d4]/50" />
-                )}
+                <div className={cn("flex items-center min-w-0", !isOpen ? "justify-center" : "gap-3")}>
+                  <div className="p-2 rounded-xl bg-rose-500/20 border border-rose-500/40 text-rose-300 shrink-0">
+                    <MessageSquare className="h-4 w-4 text-rose-300 group-hover:scale-110 transition-transform" />
+                  </div>
+                  {isOpen && (
+                    <div className="flex flex-col min-w-0">
+                      <span className="text-xs font-bold text-white tracking-wide">
+                        RN Intelligence
+                      </span>
+                      <span className="text-[10px] text-rose-300/80 font-medium truncate">
+                        Copilot de Supply Chain
+                      </span>
+                    </div>
+                  )}
+                </div>
               </button>
-            );
-          })}
+            )}
+
+            {isOpen && (
+              <span className="text-[10px] uppercase font-bold tracking-widest text-slate-400 px-2 mb-1">
+                Módulos
+              </span>
+            )}
+
+            {MODULES.map((item) => {
+              const Icon = item.icon;
+              const isActive = activeTab === item.id;
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => {
+                    setActiveTab(item.id);
+                    if (typeof window !== "undefined" && window.innerWidth < 1024) {
+                      setIsOpen(false);
+                    }
+                  }}
+                  title={!isOpen ? `${item.num}. ${item.label}` : undefined}
+                  className={cn(
+                    "group w-full flex items-center transition-all border cursor-pointer",
+                    !isOpen
+                      ? "justify-center p-2.5 rounded-2xl"
+                      : "justify-between p-3 rounded-2xl text-left",
+                    isActive
+                      ? item.activeBg + " shadow-lg"
+                      : "bg-white/[0.01] hover:bg-white/[0.04] text-slate-400 hover:text-slate-100 border-transparent hover:border-white/5"
+                  )}
+                >
+                  <div className={cn("flex items-center min-w-0", !isOpen ? "justify-center" : "gap-3")}>
+                    <div
+                      className={cn(
+                        "p-2 rounded-xl border transition-colors shrink-0",
+                        isActive
+                          ? "bg-white/10 border-white/20 text-white"
+                          : "bg-white/[0.02] border-white/5 text-slate-400 group-hover:text-slate-200"
+                      )}
+                    >
+                      <Icon className={cn("h-4 w-4", isActive ? item.iconColor : "")} />
+                    </div>
+                    {isOpen && (
+                      <div className="flex flex-col min-w-0">
+                        <span
+                          className={cn(
+                            "text-xs font-bold truncate",
+                            isActive ? "text-white" : "text-slate-300"
+                          )}
+                        >
+                          {item.label}
+                        </span>
+                        <span className="text-[10px] text-slate-400 truncate">
+                          {item.description}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                  {isOpen && (
+                    <ChevronRight
+                      className={cn(
+                        "h-4 w-4 shrink-0 transition-transform",
+                        isActive
+                          ? "text-white translate-x-0.5 opacity-100"
+                          : "text-slate-600 opacity-0 group-hover:opacity-100"
+                      )}
+                    />
+                  )}
+                </button>
+              );
+            })}
+          </div>
         </div>
 
-        {/* Base da Sidebar: Governança / Supply Chain */}
-        <div className="p-4 border-t border-white/10 shrink-0">
-          {isOpen ? (
-            <div className="flex items-center gap-3 animate-in fade-in duration-200">
-              <div className="w-9 h-9 rounded-xl bg-white/[0.03] border border-white/10 flex items-center justify-center shrink-0">
-                <Users className="w-4 h-4 text-[#06b6d4]" />
+        {/* Sidebar Footer */}
+        <div className="flex flex-col gap-3 pt-4 border-t border-white/10 mt-auto">
+          {isOpen && (
+            <div className="p-3 rounded-2xl bg-white/[0.02] border border-white/5 flex flex-col gap-1 text-[11px]">
+              <div className="flex justify-between text-slate-400">
+                <span>Catálogo Ativo:</span>
+                <span className="font-mono font-semibold text-slate-200">38.450 SKUs</span>
               </div>
-              <div className="flex flex-col text-left">
-                <span className="text-xs font-bold text-white">Supply Chain</span>
-                <span className="text-[10px] text-slate-400">Diretoria de Operações</span>
+              <div className="flex justify-between text-slate-400">
+                <span>Itens em Risco:</span>
+                <span className="font-mono font-semibold text-rose-300">12 SKUs</span>
               </div>
-            </div>
-          ) : (
-            <div
-              className="flex justify-center cursor-pointer text-slate-400 hover:text-[#06b6d4] transition-colors"
-              title="Diretoria de Operações • Supply Chain"
-            >
-              <div className="w-8 h-8 rounded-xl bg-white/[0.03] border border-white/10 flex items-center justify-center">
-                <Users className="w-4 h-4 text-[#06b6d4]" />
+              <div className="flex justify-between text-slate-400">
+                <span>SLA Global:</span>
+                <span className="font-mono font-semibold text-emerald-300">91.4%</span>
               </div>
             </div>
           )}
+
+          <a
+            href="https://github.com/Renanbritto/supply-chain-inventory-analytics"
+            target="_blank"
+            rel="noreferrer"
+            title="Repositório GitHub"
+            className={cn(
+              "flex items-center rounded-xl text-xs font-semibold bg-white/[0.06] hover:bg-white/10 text-slate-200 hover:text-white border border-white/10 transition-colors shadow-sm cursor-pointer",
+              !isOpen ? "justify-center p-2.5" : "justify-center gap-2 p-2.5"
+            )}
+          >
+            <svg className="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+              <path
+                fillRule="evenodd"
+                clipRule="evenodd"
+                d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
+              />
+            </svg>
+            {isOpen && <span>Repositório GitHub</span>}
+          </a>
         </div>
       </aside>
     </>

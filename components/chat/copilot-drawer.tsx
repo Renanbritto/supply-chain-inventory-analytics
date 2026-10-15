@@ -1,7 +1,7 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { Send, X, Bot, User, Trash2, Sparkles, Database } from "lucide-react";
+import { Send, X, Bot, User, Trash2 } from "lucide-react";
 import {
   ChatMessage,
   SUPPLY_CHAIN_METADATA,
@@ -20,7 +20,7 @@ export function CopilotDrawer({ isOpen, onClose }: CopilotDrawerProps) {
       role: "assistant",
       content: `Olá! Sou o **RN Intelligence Copilot**, seu assistente analítico executivo para **Supply Chain & Gestão Estratégica de Estoque**.
 
-Estou conectado à modelagem Star Schema e motor preditivo **D-Day**. Você pode me fazer perguntas sobre risco de ruptura, capital em sobreestoque, Curva ABC ou compliance de SLA de fornecedores!`,
+Estou conectado à modelagem Star Schema e ao motor preditivo **D-Day**. Você pode me fazer perguntas sobre risco de ruptura, capital em sobreestoque, Curva ABC ou compliance de SLA de fornecedores!`,
       timestamp: new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }),
     },
   ]);
@@ -62,7 +62,8 @@ Estou conectado à modelagem Star Schema e motor preditivo **D-Day**. Você pode
       const errorMsg: ChatMessage = {
         id: `bot-err-${Date.now()}`,
         role: "assistant",
-        content: "Desculpe, ocorreu um erro momentâneo ao processar a análise analítica. Por favor, tente novamente.",
+        content:
+          "Desculpe, ocorreu um erro momentâneo ao processar a análise analítica. Por favor, tente novamente.",
         timestamp: new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }),
       };
       setMessages((prev) => [...prev, errorMsg]);
@@ -97,8 +98,8 @@ Estou conectado à modelagem Star Schema e motor preditivo **D-Day**. Você pode
         {/* Header do Drawer */}
         <div className="p-4 sm:p-5 border-b border-white/10 flex items-center justify-between gap-3 shrink-0">
           <div className="flex items-center gap-3">
-            {/* Novo emblema oficial de alta definição do RN Intelligence */}
-            <div className="w-10 h-10 rounded-2xl bg-[#090d16] border border-[#06b6d4]/40 overflow-hidden flex items-center justify-center shrink-0 shadow-lg shadow-[#06b6d4]/10">
+            {/* Emblema Oficial Sentinel em #0c101d border-rose-500/30 */}
+            <div className="w-10 h-10 rounded-2xl bg-[#0c101d] border border-rose-500/30 overflow-hidden flex items-center justify-center shrink-0 shadow-lg shadow-rose-500/10">
               <img
                 src="/rn_logo_emblem.jpg"
                 alt="RN Intelligence"
@@ -110,12 +111,12 @@ Estou conectado à modelagem Star Schema e motor preditivo **D-Day**. Você pode
                 <h3 className="text-sm font-bold text-white tracking-tight">
                   RN Intelligence
                 </h3>
-                <span className="px-2 py-0.5 rounded-full bg-[#06b6d4]/10 border border-[#06b6d4]/30 text-[10px] font-mono font-bold text-[#06b6d4]">
+                <span className="px-2 py-0.5 rounded-full bg-rose-500/15 border border-rose-500/35 text-[10px] font-mono font-bold text-rose-300">
                   Copilot IA
                 </span>
               </div>
               <p className="text-[11px] text-slate-400">
-                Supply Chain & Gestão Estratégica de Estoque
+                Supply Chain &amp; Gestão Estratégica de Estoque
               </p>
             </div>
           </div>
@@ -124,7 +125,7 @@ Estou conectado à modelagem Star Schema e motor preditivo **D-Day**. Você pode
             <button
               type="button"
               onClick={handleClearHistory}
-              className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-white/[0.06] transition-colors cursor-pointer border border-transparent hover:border-white/5"
+              className="p-2 rounded-xl text-slate-400 hover:text-white bg-white/[0.02] hover:bg-white/[0.08] transition-colors cursor-pointer border border-transparent hover:border-white/5"
               title="Limpar Conversa"
               aria-label="Limpar Conversa"
             >
@@ -133,7 +134,7 @@ Estou conectado à modelagem Star Schema e motor preditivo **D-Day**. Você pode
             <button
               type="button"
               onClick={onClose}
-              className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-white/[0.06] transition-colors cursor-pointer border border-transparent hover:border-white/5"
+              className="p-2 rounded-xl text-slate-400 hover:text-white bg-white/[0.02] hover:bg-white/[0.08] transition-colors cursor-pointer border border-transparent hover:border-white/5"
               title="Fechar Chat"
               aria-label="Fechar Chat"
             >
@@ -154,8 +155,8 @@ Estou conectado à modelagem Star Schema e motor preditivo **D-Day**. Você pode
               <div
                 className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 border ${
                   msg.role === "user"
-                    ? "bg-blue-600/20 text-blue-300 border-blue-500/30"
-                    : "bg-[#06b6d4]/20 text-[#06b6d4] border-[#06b6d4]/30"
+                    ? "bg-rose-500/20 text-rose-300 border-rose-500/40"
+                    : "bg-white/[0.04] text-cyan-300 border-white/10"
                 }`}
               >
                 {msg.role === "user" ? (
@@ -168,7 +169,7 @@ Estou conectado à modelagem Star Schema e motor preditivo **D-Day**. Você pode
               <div
                 className={`max-w-[85%] rounded-2xl p-3.5 text-xs sm:text-sm leading-relaxed border ${
                   msg.role === "user"
-                    ? "bg-blue-600/20 text-white border-blue-500/30 ml-auto"
+                    ? "bg-rose-500/20 text-white border-rose-500/30 ml-auto"
                     : "bg-white/[0.03] text-slate-200 border-white/10"
                 }`}
               >
@@ -182,11 +183,11 @@ Estou conectado à modelagem Star Schema e motor preditivo **D-Day**. Você pode
 
           {isLoading && (
             <div className="flex items-start gap-3">
-              <div className="w-8 h-8 rounded-xl bg-[#06b6d4]/20 text-[#06b6d4] border border-[#06b6d4]/30 flex items-center justify-center shrink-0 animate-pulse">
+              <div className="w-8 h-8 rounded-xl bg-rose-500/20 text-rose-300 border border-rose-500/30 flex items-center justify-center shrink-0 animate-pulse">
                 <Bot className="w-4 h-4" />
               </div>
               <div className="p-3.5 rounded-2xl bg-white/[0.03] border border-white/10 text-xs text-slate-400 flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-[#06b6d4] animate-ping" />
+                <span className="w-2 h-2 rounded-full bg-rose-400 animate-ping" />
                 RN Intelligence consultando métricas de estoque e D-Day...
               </div>
             </div>
@@ -201,7 +202,7 @@ Estou conectado à modelagem Star Schema e motor preditivo **D-Day**. Você pode
               type="button"
               key={idx}
               onClick={() => handleSendMessage(q)}
-              className="px-3 py-1.5 rounded-full bg-white/[0.04] hover:bg-[#06b6d4]/15 hover:border-[#06b6d4]/30 border border-white/10 text-[11px] text-slate-300 hover:text-[#06b6d4] whitespace-nowrap transition-all cursor-pointer shrink-0"
+              className="px-3 py-1.5 rounded-full bg-white/[0.04] hover:bg-rose-500/15 hover:border-rose-500/30 border border-white/10 text-[11px] text-slate-300 hover:text-rose-300 whitespace-nowrap transition-all cursor-pointer shrink-0"
             >
               {q}
             </button>
@@ -222,12 +223,12 @@ Estou conectado à modelagem Star Schema e motor preditivo **D-Day**. Você pode
               value={inputMessage}
               onChange={(e) => setInputMessage(e.target.value)}
               placeholder="Pergunte ao RN Intelligence Copilot..."
-              className="flex-1 bg-[#090d16] border border-white/10 rounded-2xl px-4 py-2.5 text-xs sm:text-sm text-white placeholder:text-slate-500 outline-none focus:border-[#06b6d4] transition-colors"
+              className="flex-1 bg-black/40 border border-white/10 rounded-2xl px-4 py-2.5 text-xs sm:text-sm text-white placeholder:text-slate-500 outline-none focus:border-rose-500 transition-colors"
             />
             <button
               type="submit"
               disabled={!inputMessage.trim() || isLoading}
-              className="p-2.5 rounded-2xl bg-gradient-to-r from-blue-600 to-[#06b6d4] hover:from-blue-500 hover:to-[#06b6d4] text-white disabled:opacity-40 transition-all cursor-pointer shadow-lg shadow-[#06b6d4]/20 shrink-0"
+              className="p-2.5 rounded-2xl bg-gradient-to-r from-rose-600 to-amber-500 hover:from-rose-500 hover:to-amber-400 text-white disabled:opacity-40 transition-all cursor-pointer shadow-lg shadow-rose-500/20 shrink-0"
               title="Enviar Mensagem"
               aria-label="Enviar Mensagem"
             >
